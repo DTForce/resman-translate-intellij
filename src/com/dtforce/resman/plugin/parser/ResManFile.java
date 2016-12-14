@@ -5,6 +5,7 @@ import com.dtforce.resman.plugin.fileType.ResManLanguage;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class ResManFile extends PsiFileBase {
@@ -22,6 +23,12 @@ public class ResManFile extends PsiFileBase {
     @Override
     public String toString() {
         return "ResMan File";
+    }
+
+
+    public ResManProperty[] getProperties()
+    {
+        return PsiTreeUtil.getChildrenOfType(this, ResManProperty.class);
     }
 
 }

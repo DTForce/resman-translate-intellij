@@ -1,9 +1,11 @@
 package com.dtforce.resman.plugin.annotation;
 
 
+import com.dtforce.resman.plugin.util.PropertyReference;
+import com.dtforce.resman.plugin.util.ResManUtil;
 import com.dtforce.resman.plugin.fileType.ResManFileType;
-import com.dtforce.resman.plugin.parser.ResManFile;
 import com.dtforce.resman.plugin.parser.ResManElementFactory;
+import com.dtforce.resman.plugin.parser.ResManFile;
 import com.dtforce.resman.plugin.parser.ResManProperty;
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction;
 import com.intellij.lang.ASTNode;
@@ -19,19 +21,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.indexing.FileBasedIndex;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
 class QuickFixAction extends BaseIntentionAction {
-    private String key;
+    private PropertyReference propertyReference;
 
-    QuickFixAction(String key) {
-        this.key = key;
+    public QuickFixAction(PropertyReference propertyReference) {
+        this.propertyReference = propertyReference;
     }
 
     @NotNull
@@ -57,9 +56,7 @@ class QuickFixAction extends BaseIntentionAction {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-                Collection<VirtualFile> virtualFiles =
-                        FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, ResManFileType.INSTANCE,
-                                GlobalSearchScope.allScope(project));
+                Collection<VirtualFile> virtualFiles = ResManUtil.findFilesForClass(project, propertyReference.getClassName());
                 if (virtualFiles.size() == 1) {
                     createProperty(project, virtualFiles.iterator().next());
                 } else {
@@ -86,11 +83,12 @@ class QuickFixAction extends BaseIntentionAction {
                     simpleFile.getNode().addChild(ResManElementFactory.createCRLF(project).getNode());
                 }
                 // IMPORTANT: change spaces to escaped spaces or the new node will only have the first word for the key
-                ResManProperty property = ResManElementFactory.createProperty(project, key, "");
+                ResManProperty property = ResManElementFactory.createProperty(project, propertyReference.getKey(), "");
                 simpleFile.getNode().addChild(property.getNode());
                 ((Navigatable) property.getLastChild().getNavigationElement()).navigate(true);
-                FileEditorManager.getInstance(project).getSelectedTextEditor().getCaretModel().
-                        moveCaretRelatively(2, 0, false, false, false);
+                FileEditorManager.getInstance(project).getSelectedTextEditor()
+                        .getCaretModel()
+                        .moveCaretRelatively(2, 0, false, false, false);
             }
         }.execute();
     }

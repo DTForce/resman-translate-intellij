@@ -1,6 +1,7 @@
 package com.dtforce.resman.plugin.latte;
 
-import com.dtforce.resman.plugin.ResManUtil;
+import com.dtforce.resman.plugin.util.PropertyReference;
+import com.dtforce.resman.plugin.util.ResManUtil;
 import com.dtforce.resman.plugin.parser.ResManProperty;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -54,23 +55,33 @@ public class ResManLatteUtil {
         }
     }
 
-    @NotNull
-    public static List<ResManProperty> findProperties(LatteMacroContent macroContent)
+    public static PropertyReference extractPropertyReference(LatteMacroContent macroContent)
     {
         ASTNode firstArg = macroContent.getNode().findChildByType(LatteTypes.T_MACRO_ARGS);
         if (firstArg == null) {
-            return Collections.emptyList();
+            return null;
         }
 
         MatchingResult matchingResult = MatchingResult.fromString(firstArg.getText());
         if (matchingResult == null) {
-            return Collections.emptyList();
+            return null;
         }
-
-        return ResManUtil.findProperties(
-                macroContent.getProject(),
+        return new PropertyReference(
                 matchingResult.getClassName(),
                 matchingResult.getConstant()
+        );
+    }
+
+    @NotNull
+    public static List<ResManProperty> findProperties(LatteMacroContent macroContent)
+    {
+        PropertyReference propertyReference = extractPropertyReference(macroContent);
+        if (propertyReference == null) {
+            return Collections.emptyList();
+        }
+        return ResManUtil.findProperties(
+                macroContent.getProject(),
+                propertyReference
         );
     }
 

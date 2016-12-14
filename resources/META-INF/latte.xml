@@ -2,5 +2,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <lang.foldingBuilder language="Latte" implementationClass="com.dtforce.resman.plugin.folding.ResManLatteFoldingBuilder"/>
         <codeInsight.lineMarkerProvider language="Latte" implementationClass="com.dtforce.resman.plugin.annotation.ResManLatteLineMarker"/>
+        <annotator language="Latte" implementationClass="com.dtforce.resman.plugin.annotation.ResManLatteAnnotator"/>
     </extensions>
 </idea-plugin>

@@ -1,5 +1,0 @@
-<idea-plugin version="2">
-    <extensions defaultExtensionNs="com.intellij">
-        <annotator language="JAVA" implementationClass="com.dtforce.resman.plugin.annotation.ResManAnnotator"/>
-    </extensions>
-</idea-plugin>

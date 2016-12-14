@@ -1,7 +1,7 @@
 package com.dtforce.resman.plugin.folding;
 
-import com.dtforce.resman.plugin.ResManUtil;
 import com.dtforce.resman.plugin.parser.ResManProperty;
+import com.dtforce.resman.plugin.php.ResManPhpUtil;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -28,7 +28,7 @@ public class ResManFoldingBuilder extends FoldingBuilderEx {
         Collection<ClassConstantReference> classConstantReferences =
                 PsiTreeUtil.findChildrenOfType(root, ClassConstantReference.class);
         for (final ClassConstantReference classConstantReference : classConstantReferences) {
-            final List<ResManProperty> properties = ResManUtil.findProperties(classConstantReference);
+            final List<ResManProperty> properties = ResManPhpUtil.findProperties(classConstantReference);
             if (properties.size() == 1) {
                 descriptors.add(new FoldingDescriptor(classConstantReference.getNode(),
                         new TextRange(classConstantReference.getTextRange().getStartOffset(),

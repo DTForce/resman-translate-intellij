@@ -1,4 +1,4 @@
-package com.dtforce.resman.plugin;
+package com.dtforce.resman.plugin.util;
 
 import com.dtforce.resman.plugin.fileType.ResManFileType;
 import com.dtforce.resman.plugin.parser.ResManFile;
@@ -11,8 +11,6 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
-import com.jetbrains.php.lang.psi.elements.ClassConstantReference;
-import com.jetbrains.php.lang.psi.elements.ClassReference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,31 +19,34 @@ import java.util.List;
 
 public class ResManUtil {
 
-    public static List<ResManProperty> findProperties(ClassConstantReference classConstantReference)
+    public static List<VirtualFile> findFilesForClass(Project project, String className)
     {
-        ClassReference classReference = (ClassReference) classConstantReference.getClassReference();
-
-        Project project = classConstantReference.getProject();
-        return ResManUtil.findProperties(project, classReference.getName(), classConstantReference.getName());
-    }
-
-    public static List<ResManProperty> findProperties(Project project, String className, String key)
-    {
-        List<ResManProperty> result = null;
         Collection<VirtualFile> virtualFiles =
                 FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, ResManFileType.INSTANCE,
                         GlobalSearchScope.allScope(project));
+        List<VirtualFile> virtualFilesFiltered = new ArrayList<>();
         String fileName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, className);
         for (VirtualFile virtualFile : virtualFiles) {
-            if ( ! virtualFile.getNameWithoutExtension().equals(fileName)) {
+            if (!virtualFile.getNameWithoutExtension().equals(fileName)) {
                 continue;
             }
+            virtualFilesFiltered.add(virtualFile);
+        }
+        return virtualFilesFiltered;
+    }
+
+
+    public static List<ResManProperty> findProperties(Project project, PropertyReference propertyReference)
+    {
+        List<ResManProperty> result = null;
+        Collection<VirtualFile> virtualFiles = findFilesForClass(project, propertyReference.getClassName());
+        for (VirtualFile virtualFile : virtualFiles) {
             ResManFile simpleFile = (ResManFile) PsiManager.getInstance(project).findFile(virtualFile);
             if (simpleFile != null) {
-                ResManProperty[] properties = PsiTreeUtil.getChildrenOfType(simpleFile, ResManProperty.class);
+                ResManProperty[] properties = simpleFile.getProperties();
                 if (properties != null) {
                     for (ResManProperty property : properties) {
-                        if (key.equals(property.getKey())) {
+                        if (propertyReference.getKey().equals(property.getKey())) {
                             if (result == null) {
                                 result = new ArrayList<ResManProperty>();
                             }
@@ -61,14 +62,8 @@ public class ResManUtil {
     public static List<ResManProperty> findProperties(Project project, String className)
     {
         List<ResManProperty> result = new ArrayList<ResManProperty>();
-        Collection<VirtualFile> virtualFiles =
-                FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, ResManFileType.INSTANCE,
-                        GlobalSearchScope.allScope(project));
-        String fileName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, className);
+        Collection<VirtualFile> virtualFiles = findFilesForClass(project, className);
         for (VirtualFile virtualFile : virtualFiles) {
-            if ( ! virtualFile.getName().equals(fileName)) {
-                continue;
-            }
             ResManFile simpleFile = (ResManFile) PsiManager.getInstance(project).findFile(virtualFile);
             if (simpleFile != null) {
                 ResManProperty[] properties = PsiTreeUtil.getChildrenOfType(simpleFile, ResManProperty.class);

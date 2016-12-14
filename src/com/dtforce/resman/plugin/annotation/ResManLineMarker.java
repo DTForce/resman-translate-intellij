@@ -1,7 +1,7 @@
 package com.dtforce.resman.plugin.annotation;
 
-import com.dtforce.resman.plugin.ResManUtil;
 import com.dtforce.resman.plugin.parser.ResManProperty;
+import com.dtforce.resman.plugin.php.ResManPhpUtil;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
@@ -19,7 +19,7 @@ public class ResManLineMarker extends RelatedItemLineMarkerProvider {
                                             Collection<? super RelatedItemLineMarkerInfo> result) {
         if (element instanceof ClassConstantReference) {
             ClassConstantReference classConstantReference = (ClassConstantReference) element;
-            final List<ResManProperty> properties = ResManUtil.findProperties(classConstantReference);
+            final List<ResManProperty> properties = ResManPhpUtil.findProperties(classConstantReference);
             if (properties.size() > 0) {
                 NavigationGutterIconBuilder<PsiElement> builder =
                         NavigationGutterIconBuilder.create(AllIcons.FileTypes.Properties).
