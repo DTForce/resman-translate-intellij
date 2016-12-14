@@ -1,0 +1,24 @@
+{
+  parserClass="com.dtforce.resman.plugin.parser.ResManParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="ResMan"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.dtforce.resman.plugin.parser"
+  psiImplPackage="com.dtforce.resman.plugin.parser.impl"
+
+  elementTypeHolderClass="com.dtforce.resman.plugin.parser.ResManTypes"
+  elementTypeClass="com.dtforce.resman.plugin.parser.ResManElementType"
+  tokenTypeClass="com.dtforce.resman.plugin.parser.ResManTokenType"
+
+  psiImplUtilClass="com.dtforce.resman.plugin.parser.ResManPsiImplUtil"
+}
+
+simpleFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY? SEPARATOR valueParam_?) | KEY {methods=[getKey getValue]}
+
+private valueParam_ ::= PARAM? (VALUE PARAM?)*

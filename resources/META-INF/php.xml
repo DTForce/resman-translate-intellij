@@ -1,0 +1,6 @@
+<idea-plugin version="2">
+    <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.lineMarkerProvider language="PHP" implementationClass="com.dtforce.resman.plugin.annotation.ResManLineMarker"/>
+        <lang.foldingBuilder language="PHP" implementationClass="com.dtforce.resman.plugin.folding.ResManFoldingBuilder"/>
+    </extensions>
+</idea-plugin>

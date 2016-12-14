@@ -1,0 +1,6 @@
+<idea-plugin version="2">
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.foldingBuilder language="Latte" implementationClass="com.dtforce.resman.plugin.folding.ResManLatteFoldingBuilder"/>
+        <codeInsight.lineMarkerProvider language="Latte" implementationClass="com.dtforce.resman.plugin.annotation.ResManLatteLineMarker"/>
+    </extensions>
+</idea-plugin>

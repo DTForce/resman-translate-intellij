@@ -1,0 +1,43 @@
+<idea-plugin version="2">
+  <id>com.dtforce.resman.plugin</id>
+  <name>ResMan file support plugin</name>
+  <version>1.0</version>
+  <vendor email="info@dtforce.com" url="http://www.dtforce.com">DT>Force</vendor>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends optional="true" config-file="php.xml">com.jetbrains.php</depends>
+  <depends optional="true" config-file="latte.xml">com.jantvrdik.intellij.latte</depends>
+  <depends optional="true" config-file="java.xml">com.intellij.modules.java</depends>
+
+  <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="145.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileTypeFactory implementation="com.dtforce.resman.plugin.fileType.ResManFileTypeFactory"/>
+    <lang.parserDefinition language="ResMan" implementationClass="com.dtforce.resman.plugin.parser.ResManParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="ResMan" implementationClass="com.dtforce.resman.plugin.syntax.ResManSyntaxHighlighterFactory"/>
+    <colorSettingsPage implementation="com.dtforce.resman.plugin.syntax.ResManColorSettingsPage"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
