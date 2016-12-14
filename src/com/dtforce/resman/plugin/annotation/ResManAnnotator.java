@@ -28,7 +28,7 @@ public class ResManAnnotator implements Annotator {
                 TextRange range = new TextRange(element.getTextRange().getStartOffset(),
                         element.getTextRange().getEndOffset());
                 Annotation annotation = holder.createInfoAnnotation(range, null);
-                annotation.setTextAttributes(DefaultLanguageHighlighterColors.);
+                annotation.setTextAttributes(DefaultLanguageHighlighterColors.CONSTANT);
             } else if (properties.size() == 0) {
                 PropertyReference propertyReference = ResManPhpUtil.extractPropertyReference(constantReference);
                 Collection<VirtualFile> virtualFiles = ResManUtil.findFilesForClass(constantReference.getProject(), propertyReference.getClassName());

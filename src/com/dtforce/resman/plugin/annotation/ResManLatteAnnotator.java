@@ -19,17 +19,15 @@ public class ResManLatteAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof LatteMacroContent) {
-            LatteMacroContent constantReference = (LatteMacroContent) element;
-            final List<ResManProperty> properties = ResManLatteUtil.findProperties(constantReference);
+            LatteMacroContent latteMacroContent = (LatteMacroContent) element;
+            final List<ResManProperty> properties = ResManLatteUtil.findProperties(latteMacroContent);
             if (properties.size() == 1) {
-                TextRange range = new TextRange(element.getTextRange().getStartOffset(),
-                        element.getTextRange().getEndOffset());
+                TextRange range = ResManLatteUtil.getFoldingRange(latteMacroContent);
                 Annotation annotation = holder.createInfoAnnotation(range, null);
-                annotation.setTextAttributes(DefaultLanguageHighlighterColors.LINE_COMMENT);
+                annotation.setTextAttributes(DefaultLanguageHighlighterColors.CONSTANT);
             } else if (properties.size() == 0) {
-                PropertyReference propertyReference = ResManLatteUtil.extractPropertyReference(constantReference);
-                TextRange range = new TextRange(element.getTextRange().getStartOffset(),
-                        element.getTextRange().getEndOffset());
+                PropertyReference propertyReference = ResManLatteUtil.extractPropertyReference(latteMacroContent);
+                TextRange range = ResManLatteUtil.getFoldingRange(latteMacroContent);
                 holder.createWeakWarningAnnotation(range, "Unresolved property")
                         .registerFix(new QuickFixAction(propertyReference));
             }
