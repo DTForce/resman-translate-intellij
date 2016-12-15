@@ -90,12 +90,12 @@ public class ResManLatteUtil {
     {
         ASTNode firstArg = macroContent.getNode().findChildByType(LatteTypes.T_MACRO_ARGS);
         if (firstArg == null) {
-            throw new RuntimeException("This function can only be called if findProperties returned non empty list.");
+            throw new RuntimeException("This function can only be called if extractPropertyReference returned not null.");
         }
 
         MatchingResult matchingResult = MatchingResult.fromString(firstArg.getText());
         if (matchingResult == null) {
-            throw new RuntimeException("This function can only be called if findProperties returned non empty list.");
+            throw new RuntimeException("This function can only be called if extractPropertyReference returned not null.");
         }
 
         if (matchingResult.getRest() == null) {

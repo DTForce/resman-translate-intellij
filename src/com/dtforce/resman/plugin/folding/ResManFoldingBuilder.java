@@ -16,24 +16,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class ResManFoldingBuilder extends FoldingBuilderEx {
     @NotNull
     @Override
-    public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
+    public synchronized FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         FoldingGroup group = FoldingGroup.newGroup("ResMan");
 
-        List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
+        List<FoldingDescriptor> descriptors = new ArrayList<>();
         Collection<ClassConstantReference> classConstantReferences =
                 PsiTreeUtil.findChildrenOfType(root, ClassConstantReference.class);
         for (final ClassConstantReference classConstantReference : classConstantReferences) {
             final List<ResManProperty> properties = ResManPhpUtil.findProperties(classConstantReference);
             if (properties.size() == 1) {
-                descriptors.add(new FoldingDescriptor(classConstantReference.getNode(),
-                        new TextRange(classConstantReference.getTextRange().getStartOffset(),
-                                classConstantReference.getTextRange().getEndOffset()),
-                        group) {
+                FoldingDescriptor foldingDescriptor = new FoldingDescriptor(classConstantReference.getNode(),
+                        new TextRange(
+                                classConstantReference.getTextRange().getStartOffset(),
+                                classConstantReference.getTextRange().getEndOffset()
+                        ),
+                        group,
+                        new HashSet<>(properties)
+                ) {
                     @Nullable
                     @Override
                     public String getPlaceholderText() {
@@ -41,20 +46,25 @@ public class ResManFoldingBuilder extends FoldingBuilderEx {
                         String valueOf = properties.get(0).getValue();
                         return valueOf == null ? "" : valueOf;
                     }
-                });
+                };
+                descriptors.add(foldingDescriptor);
             }
-        }
-        return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
+        }return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
+
 
     @Nullable
     @Override
-    public String getPlaceholderText(@NotNull ASTNode node) {
+    public String getPlaceholderText(@NotNull ASTNode node)
+    {
         return "...";
     }
 
+
     @Override
-    public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+    public boolean isCollapsedByDefault(@NotNull ASTNode node)
+    {
         return true;
     }
+
 }

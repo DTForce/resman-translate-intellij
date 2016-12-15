@@ -29,7 +29,7 @@ import java.util.Collection;
 class QuickFixAction extends BaseIntentionAction {
     private PropertyReference propertyReference;
 
-    public QuickFixAction(PropertyReference propertyReference) {
+    public QuickFixAction(@NotNull PropertyReference propertyReference) {
         this.propertyReference = propertyReference;
     }
 

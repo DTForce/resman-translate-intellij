@@ -16,8 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ResManLatteAnnotator implements Annotator {
+
     @Override
-    public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
+    public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder)
+    {
         if (element instanceof LatteMacroContent) {
             LatteMacroContent latteMacroContent = (LatteMacroContent) element;
             final List<ResManProperty> properties = ResManLatteUtil.findProperties(latteMacroContent);
@@ -27,10 +29,16 @@ public class ResManLatteAnnotator implements Annotator {
                 annotation.setTextAttributes(DefaultLanguageHighlighterColors.CONSTANT);
             } else if (properties.size() == 0) {
                 PropertyReference propertyReference = ResManLatteUtil.extractPropertyReference(latteMacroContent);
-                TextRange range = ResManLatteUtil.getFoldingRange(latteMacroContent);
-                holder.createWeakWarningAnnotation(range, "Unresolved property")
-                        .registerFix(new QuickFixAction(propertyReference));
+                if (propertyReference != null) {
+                    TextRange range = new TextRange(
+                            element.getTextRange().getStartOffset(),
+                            element.getTextRange().getEndOffset()
+                    );
+                    holder.createWeakWarningAnnotation(range, "Unresolved property")
+                            .registerFix(new QuickFixAction(propertyReference));
+                }
             }
         }
     }
+
 }
