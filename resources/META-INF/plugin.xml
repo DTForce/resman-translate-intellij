@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.dtforce.resman.plugin</id>
   <name>ResMan file support plugin</name>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <vendor email="info@dtforce.com" url="http://www.dtforce.com">DT>Force</vendor>
 
   <depends>com.intellij.modules.platform</depends>
@@ -9,11 +9,14 @@
   <depends optional="true" config-file="latte.xml">com.jantvrdik.intellij.latte</depends>
 
   <description><![CDATA[
-      Plugin for IntelliJ/PhpStorm facilitating usage of ResMan translate.
+      Plugin for IntelliJ/PhpStorm facilitating usage of <a href="https://github.com/DTForce/resman">ResMan</a> translate.
     ]]></description>
 
   <change-notes><![CDATA[
-      No changes yet.
+		<p>1.0.1</p>
+		<ul>
+			<li>Fixed FoldingDescriptor priority.</li>
+		</ul>
     ]]>
   </change-notes>
 
