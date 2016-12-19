@@ -49,7 +49,8 @@ public class ResManFoldingBuilder extends FoldingBuilderEx {
                 };
                 descriptors.add(foldingDescriptor);
             }
-        }return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
+        }
+        return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
 
 
